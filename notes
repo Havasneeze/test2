@@ -1,0 +1,68 @@
+ 
+ Needed to downgrade to version 16 from 17 to get material ui to install.  Ran the following below.
+ npm install --save react@16.12.0 react-dom@16.12.0
+
+ to upgrade back to 17, type the following:
+  npm install --save react@^17 react-dom@^17
+
+run npm start again after material UI install
+
+
+import React, { useEffect, useState } from 'react';
+import { Container, AppBar, Button, Typography, Grow, Grid } from '@material-ui/core';
+import { useDispatch } from 'react-redux';  // hook that returns a ref to the dispatch function from redux store. Can use to dispatch actions
+
+import { getPosts } from './actions/posts';
+import Posts from './components/Posts/Posts';
+import Form from './components/Form/Form';
+import compass from './images/compass.png';
+import pictures from './images/Adventures.png';
+import useStyles from './styles';
+import { Modal } from './components/Modal/modal';
+
+const App = () => {
+    const classes = useStyles();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getPosts());
+    }, [dispatch]);
+
+    const [show, setShow] = useState(false);
+    const closeModalHandler = () => setShow(false);
+
+    return (
+        <div>
+            <Container maxWidth="lg">
+                <AppBar className={classes.appBar} position="static" color="inherit">
+                    <img className={classes.image} src={compass} alt="icon" height="40" width="40" />
+                    <img className={classes.image} src={pictures} alt="icon" height="80" width="400" />
+                    <button onClick={() => setShow(true)}>Post an Adventure</button>
+                    {/* <Typography className={classes.heading} variant="h2" align="center">Adventures</Typography> */}
+                    {/* <img className={classes.image} src={compass} alt="icon" height="40" width="40" /> */}
+                </AppBar>
+                <Grow in>
+                    <Container>
+                        <Grid container justify="space-between" alignItems="stretch" spacing={3}>
+                            <Grid item xs={12} sm={7}>
+                                <Posts />
+                            </Grid>
+                            <Grid item xs={12} sm={4}>
+                                <div>
+                                    {/* <button onClick={() => setShow(true)}>Post an Adventure</button> */}
+                                    <Modal show={show} closeModalHandler={closeModalHandler} />
+
+                                </div>
+                                {/* <Form /> */}
+                            </Grid>
+                        </Grid>
+                    </Container>
+                </Grow>
+            </Container>
+        </div>
+    );
+}
+
+
+
+export default App;
